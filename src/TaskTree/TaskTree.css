@@ -1,0 +1,28 @@
+.task-tree {
+    width: 100%;
+    height: 100%;
+    color: #ffffff;
+    background-color: #007acc;
+    overflow: auto;
+}
+
+.pt-editable-text-input {
+    color: #000000;
+}
+
+.task-tree--task-done {
+    color: #aaaaaa;
+    text-decoration: line-through;
+}
+
+.task-tree--label {
+    overflow: hidden;
+    justify-self: self-start;
+}
+
+.task-tree--row {
+    display: grid;
+    grid-template-columns: 40px auto 40px 40px;
+    justify-items: center;
+    width: 100%;
+}
