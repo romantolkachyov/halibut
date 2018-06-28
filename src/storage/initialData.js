@@ -41,6 +41,7 @@ export const taskTreeInitialData =  [
     }
   ];
 
+///////
 
   export const timesheetInitailData = {
     endOfDay: '18-00',
@@ -69,3 +70,41 @@ export const taskTreeInitialData =  [
 
     ]
   };
+
+
+////////////
+
+export const taskTreeInitialDataSample =  {
+  nextTaskId: 7,
+  byId: {
+    task_1: {
+      name: 'First Task',
+      description: 'asdfasdfadsfa',
+    },
+    task_2: {
+      done: true,
+      name: '2 Task',
+    },
+    task_3: {
+      done: true,
+      name: '3 Task',
+    },
+    task_4: {
+      done: true,
+      name: 'Upper Level Folder',
+      subtasks: ['task_5', 'task_6'],
+    },
+    task_5: {
+      name: '5 task',
+    },
+    task_6: {
+      name: '6 task',
+    },
+    task_0: {
+      name: 'Upper Level Folder',         
+      subtasks: ['task_1', 'task_2', 'task_3', 'task_4'],
+    },
+  },
+  allByIds: ['task_1', 'task_2', 'task_3', 'task_4', 'task_5', 'task_6'],
+};
+////////
