@@ -52,6 +52,20 @@ export function taskTreeReducer(state = { byId: {}, allByIds: [] }, action) {
                 allByIds: state.allByIds.filter((id) => !tasksToRemove.includes(id)),
             }
         }
+        
+        case 'SET_TASK_NAME': {
+            const { taskId, name } = action.payload;
+            return {
+                ...state,
+                byId: {
+                    ...state.byId,
+                    [taskId]: {
+                        ...state.byId[taskId],
+                        name
+                    }
+                }
+            }
+        }
         default:
             return state;
     }

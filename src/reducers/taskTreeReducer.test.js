@@ -143,3 +143,43 @@ it('remove root task', () => {
         }
         )
     });
+
+
+it('update task', () => {
+    expect(taskTreeReducer({
+        nextTaskId: 6,
+        byId: {
+            task_0: {
+                name: 'Root task',
+                subtasks: ['task_1'],
+            },
+            task_1: {
+                name: 'Task 1',
+                subtasks: [],
+            },
+        },
+        allByIds: ['task_0', 'task_1'],
+    },
+    {
+        type: 'SET_TASK_NAME',
+        payload: {
+            taskId: 'task_1',
+            name: 'task 42',
+        }
+    }
+    )).toEqual({
+            nextTaskId: 6,
+            byId: {
+                task_0: {
+                    name: 'Root task',
+                    subtasks: ['task_1'],
+                },
+                task_1: {
+                    name: 'task 42',
+                    subtasks: [],
+                },
+            },
+            allByIds: ['task_0', 'task_1'],
+        }
+        )
+    });
