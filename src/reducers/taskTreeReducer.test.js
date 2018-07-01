@@ -152,19 +152,22 @@ it('update task', () => {
             task_0: {
                 name: 'Root task',
                 subtasks: ['task_1'],
+                isExpanded: false,
             },
             task_1: {
                 name: 'Task 1',
                 subtasks: [],
+                isExpanded: false,
             },
         },
         allByIds: ['task_0', 'task_1'],
     },
     {
-        type: 'SET_TASK_NAME',
+        type: 'UPDATE_TASK',
         payload: {
             taskId: 'task_1',
             name: 'task 42',
+            isExpanded: true,
         }
     }
     )).toEqual({
@@ -173,10 +176,12 @@ it('update task', () => {
                 task_0: {
                     name: 'Root task',
                     subtasks: ['task_1'],
+                    isExpanded: false,
                 },
                 task_1: {
                     name: 'task 42',
                     subtasks: [],
+                    isExpanded: true,
                 },
             },
             allByIds: ['task_0', 'task_1'],
