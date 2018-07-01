@@ -20,6 +20,38 @@ export function taskTreeReducer(state = { byId: {}, allByIds: [] }, action) {
                 allByIds: [...state.allByIds, newTaskId],
             }
         }
+        case 'REMOVE_TASK': {
+            const { taskId } = action.payload;
+
+            // The root task can't be deleted.
+            if (taskId === 'task_0') return state;
+
+            const tasksToRemove = [];
+            const checkTasksToRemove = (removeTaskId, removeSubtree = false) => {
+                const removeState = removeSubtree || removeTaskId === taskId;
+                if (removeState) {
+                    tasksToRemove.push(removeTaskId);
+                }
+                const currentTask = state.byId[removeTaskId];
+                currentTask.subtasks.forEach((task) => checkTasksToRemove(task, removeState));
+                if (currentTask.subtasks.includes(taskId)) {
+                    currentTask.subtasks = currentTask.subtasks.filter((id) => id !== taskId);
+                }
+            }
+            checkTasksToRemove('task_0');
+
+            const tasksById = {};
+            Object.keys(state.byId).forEach((id) => {
+                if (tasksToRemove.includes(id)) return;
+                tasksById[id] = state.byId[id];
+            });
+
+            return {
+                ...state,
+                byId: tasksById,
+                allByIds: state.allByIds.filter((id) => !tasksToRemove.includes(id)),
+            }
+        }
         default:
             return state;
     }
