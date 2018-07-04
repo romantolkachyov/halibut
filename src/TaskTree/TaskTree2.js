@@ -14,7 +14,6 @@ function buildTree(state, taskId) {
     };
 }
 
-
 const mapStateToProps = (state) => {
     return {
         taskTree: [buildTree(state, 'task_0')],
@@ -22,14 +21,21 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-    expandHandler: (task) => {
+    expandHandler: (taskNode) => {
         dispatch({ type: 'UPDATE_TASK', payload: { 
-            ...task,
-            taskId: task.id,
-            isExpanded: !task.isExpanded,
+            ...taskNode,
+            taskId: taskNode.id,
+            isExpanded: !taskNode.isExpanded,
          }})
     },
-    collpseHandler: () => () => ({}),
-})
+    addSubtaskHandler: (taskId) => {
+        dispatch({ 
+            type: 'ADD_SUBTASK',
+            payload: {
+                parentTaskId: taskId,
+            },
+        })
+    },
+});
 
 export const TaskTree = connect(mapStateToProps, mapDispatchToProps)(Tree);

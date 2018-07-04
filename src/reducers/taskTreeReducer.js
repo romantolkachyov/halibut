@@ -54,8 +54,9 @@ export function taskTreeReducer(state = { byId: {}, allByIds: [] }, action) {
         }
         
         case 'UPDATE_TASK': {
-            const { taskId, name, isExpanded } = action.payload;
+            const { taskId, name, isExpanded, done } = action.payload;
             const task =  state.byId[taskId];
+            
             return {
                 ...state,
                 byId: {
@@ -64,6 +65,7 @@ export function taskTreeReducer(state = { byId: {}, allByIds: [] }, action) {
                         ...task,
                         name: name || task.name,
                         isExpanded: (isExpanded !== undefined) ? isExpanded : task.isExpanded,
+                        done: (done !== undefined) ? done : task.done,
                     }
                 }
             }

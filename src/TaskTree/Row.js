@@ -6,7 +6,7 @@ export class Row extends React.Component {
     render() {
         return (
         <div className='task-tree--row'>
-            <Icon icon='tick' onClick={this.props.doneHandler} />
+            <Icon icon='tick' onClick={() => this.props.doneHandler(this.props.taskId, !this.props.done)} />
             <EditableText 
                 defaultValue={this.props.defaultValue} 
                 onConfirm={this.props.editConfirmHandler} 
@@ -14,7 +14,7 @@ export class Row extends React.Component {
                 className={ `task-tree--label ${this.props.done ? 'task-tree--task-done' : ''}` }
                 isEditing={this.props.isEditing} 
             />
-            <Icon icon='plus' onClick={this.props.addSubtaskHandler} />
+            <Icon icon='plus' onClick={() => this.props.addSubtaskHandler(this.props.taskId)} />
             { this.props.taskId !== 'task_0' ? <Icon icon='cross' onClick={this.props.removeHandler} /> : '' }
         </div>
         )
