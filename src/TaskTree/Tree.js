@@ -4,6 +4,6 @@ import './TaskTree.css';
 
 export class Tree extends Component {
     render() {
-        return <PTTree contents={this.props.taskTree} onNodeExpand={this.props.expandHandler} onNodeCollapse={this.props.expandHandler} />
+        return <PTTree contents={this.props.taskTree} onNodeExpand={this.props.expandHandler} onNodeCollapse={this.props.expandHandler} className='task-tree' />
     }
 }
