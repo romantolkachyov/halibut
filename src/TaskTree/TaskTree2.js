@@ -28,14 +28,6 @@ const mapDispatchToProps = (dispatch) => ({
             isExpanded: !taskNode.isExpanded,
          }})
     },
-    addSubtaskHandler: (taskId) => {
-        dispatch({ 
-            type: 'ADD_SUBTASK',
-            payload: {
-                parentTaskId: taskId,
-            },
-        })
-    },
 });
 
 export const TaskTree = connect(mapStateToProps, mapDispatchToProps)(Tree);

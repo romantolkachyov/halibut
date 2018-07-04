@@ -14,7 +14,7 @@ export class Row extends React.Component {
                 className={ `task-tree--label ${this.props.done ? 'task-tree--task-done' : ''}` }
                 isEditing={this.props.isEditing} 
             />
-            <Icon icon='plus' onClick={() => this.props.addSubtaskHandler(this.props.taskId)} />
+            <Icon icon='plus' onClick={() => this.props.addTaskHandler(this.props.taskId)} />
             { this.props.taskId !== 'task_0' ? <Icon icon='cross' onClick={() => this.props.removeHandler(this.props.taskId)} /> : '' }
         </div>
         )

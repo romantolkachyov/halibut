@@ -34,7 +34,16 @@ export function taskTreeRow(taskId) {
                     }
                 }
             )
-        }
+        },
+        addTaskHandler: (taskId) => {
+            dispatch({ 
+                type: 'ADD_TASK',
+                payload: {
+                    parentId: taskId,
+                    name: '',
+                },
+            })
+        },
     });
 
     return connect(mapStateToProps, mapDispatchToProps)(Row);
