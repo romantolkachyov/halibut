@@ -15,7 +15,7 @@ export class Row extends React.Component {
                 isEditing={this.props.isEditing} 
             />
             <Icon icon='plus' onClick={() => this.props.addSubtaskHandler(this.props.taskId)} />
-            { this.props.taskId !== 'task_0' ? <Icon icon='cross' onClick={this.props.removeHandler} /> : '' }
+            { this.props.taskId !== 'task_0' ? <Icon icon='cross' onClick={() => this.props.removeHandler(this.props.taskId)} /> : '' }
         </div>
         )
     }

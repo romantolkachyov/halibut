@@ -56,7 +56,7 @@ it('remove task', () => {
             },
             task_2: {
                 name: 'Task 2',
-                subtasks: [],
+                subtasks: undefined,
             },
             task_3: {
                 name: 'Task 3',
@@ -92,7 +92,7 @@ it('remove task', () => {
                 },
                 task_2: {
                     name: 'Task 2',
-                    subtasks: [],
+                    subtasks: undefined,
                 },
                 task_4: {
                     name: 'Task 4',

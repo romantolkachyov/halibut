@@ -24,6 +24,16 @@ export function taskTreeRow(taskId) {
                     },
                 },
             )
+        },
+        removeHandler: (taskId) => {
+            dispatch(
+                {
+                    type: 'REMOVE_TASK',
+                    payload: {
+                        taskId,
+                    }
+                }
+            )
         }
     });
 

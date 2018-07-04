@@ -33,6 +33,7 @@ export function taskTreeReducer(state = { byId: {}, allByIds: [] }, action) {
                     tasksToRemove.push(removeTaskId);
                 }
                 const currentTask = state.byId[removeTaskId];
+                if (!currentTask.subtasks) return;
                 currentTask.subtasks.forEach((task) => checkTasksToRemove(task, removeState));
                 if (currentTask.subtasks.includes(taskId)) {
                     currentTask.subtasks = currentTask.subtasks.filter((id) => id !== taskId);
