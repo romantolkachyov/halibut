@@ -1,7 +1,21 @@
 import { taskTreeReducer } from './taskTreeReducer';
 
 it('returns default state of task tree', () => {
-    expect(taskTreeReducer(undefined, { type: 'TEST_ACTION' })).toEqual({ byId: {}, allByIds: [] });
+    expect(taskTreeReducer(
+        undefined, 
+        { type: 'TEST_ACTION' }
+    )).toEqual({ 
+        nextTaskId: 1,
+        byId: {
+            task_0: {
+                name: 'Root',
+                subtasks: [],
+                isExpanded: false,
+                done: false,
+            }
+        },
+        allByIds: ['task_0'],
+    });
 });
 
 

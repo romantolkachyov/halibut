@@ -1,4 +1,17 @@
-export function taskTreeReducer(state = { byId: {}, allByIds: [] }, action) {
+const initialState = { 
+    nextTaskId: 1,
+    byId: {
+        task_0: {
+            name: 'Root',
+            subtasks: [],
+            isExpanded: false,
+            done: false,
+        }
+    }, 
+    allByIds: ['task_0'],
+};
+
+export function taskTreeReducer(state = initialState, action) {
     switch (action.type) {
         case 'ADD_TASK': {
             const { name, parentId } = action.payload;
