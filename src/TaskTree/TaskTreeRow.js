@@ -44,6 +44,15 @@ export function taskTreeRow(taskId) {
                 },
             })
         },
+        editConfirmHandler: (name) => {
+            dispatch({
+                type: 'UPDATE_TASK',
+                payload: {
+                    taskId,
+                    name,
+                }
+            })
+        }
     });
 
     return connect(mapStateToProps, mapDispatchToProps)(Row);
