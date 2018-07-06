@@ -10,6 +10,7 @@ export function taskTreeRow(taskId) {
             taskId,
             defaultValue: task.name,
             done: task.done,
+            isEditing: task.isEditing,
         };
     }
 
@@ -50,10 +51,10 @@ export function taskTreeRow(taskId) {
                 payload: {
                     taskId,
                     name,
+                    isEditing: false,
                 }
             })
         }
     });
-
     return connect(mapStateToProps, mapDispatchToProps)(Row);
 }

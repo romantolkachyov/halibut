@@ -45,10 +45,14 @@ it('adds new task to task tree', () => {
         byId: { 
             task_0: { 
                 name: 'Root task',
+                isExpanded: true,
                 subtasks: ['task_1'],
             },
             task_1: { 
                 name: 'This is totaly new task!',
+                isExpanded: true,
+                isEditing: true,
+                done: false,
                 subtasks: [],
             },
         }, 
@@ -154,8 +158,7 @@ it('remove root task', () => {
                 },
             },
             allByIds: ['task_0', 'task_1'],
-        }
-        )
+        })
     });
 
 

@@ -14,7 +14,7 @@ const initialState = {
 export function taskTreeReducer(state = initialState, action) {
     switch (action.type) {
         case 'ADD_TASK': {
-            const { name, parentId } = action.payload;
+            const { name, parentId, isExpanded, isEditing, done } = action.payload;
             const newTaskId = 'task_' + state.nextTaskId;
             return {
                 ...state,
@@ -23,10 +23,14 @@ export function taskTreeReducer(state = initialState, action) {
                     ...state.byId,
                     [newTaskId]: {
                         name,
-                        subtasks: [],
+                        isExpanded: false,
+                        isEditing: true,
+                        done: false,
+                        subtasks: undefined,
                     },
                     [parentId]: {
                         ...state.byId[parentId],
+                        isExpanded: true,
                         subtasks: [...state.byId[parentId].subtasks, newTaskId],
                     }
                 },
@@ -66,9 +70,9 @@ export function taskTreeReducer(state = initialState, action) {
                 allByIds: state.allByIds.filter((id) => !tasksToRemove.includes(id)),
             }
         }
-        
         case 'UPDATE_TASK': {
-            const { taskId, name, isExpanded, done } = action.payload;
+            // Kind of object.assing? Needs Refactoring.
+            const { taskId, name, isExpanded, done, isEditing } = action.payload;
             const task =  state.byId[taskId];
             
             return {
@@ -79,6 +83,7 @@ export function taskTreeReducer(state = initialState, action) {
                         ...task,
                         name: name || task.name,
                         isExpanded: (isExpanded !== undefined) ? isExpanded : task.isExpanded,
+                        isEditing: (isEditing !== undefined) ? isEditing : task.isEditing,
                         done: (done !== undefined) ? done : task.done,
                     }
                 }
