@@ -33,7 +33,7 @@ export function taskTreeReducer(state = initialState, action) {
                     [parentId]: {
                         ...parent,
                         isExpanded: true,
-                        subtasks: parent.subtasks ? [parent.subtasks, newTaskId] : [newTaskId],
+                        subtasks: parent.subtasks ? [...parent.subtasks, newTaskId] : [newTaskId],
                     }
                 },
                 allByIds: [...state.allByIds, newTaskId],

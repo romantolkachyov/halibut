@@ -50,10 +50,10 @@ it('adds new task to task tree', () => {
             },
             task_1: { 
                 name: 'This is totaly new task!',
-                isExpanded: true,
+                isExpanded: false,
                 isEditing: true,
                 done: false,
-                subtasks: [],
+                subtasks: undefined,
             },
         }, 
         allByIds: ['task_0', 'task_1'],
