@@ -16,6 +16,8 @@ export function taskTreeReducer(state = initialState, action) {
         case 'ADD_TASK': {
             const { name, parentId, isExpanded, isEditing, done } = action.payload;
             const newTaskId = 'task_' + state.nextTaskId;
+            const parent = state.byId[parentId];
+
             return {
                 ...state,
                 nextTaskId: state.nextTaskId + 1,
@@ -29,9 +31,9 @@ export function taskTreeReducer(state = initialState, action) {
                         subtasks: undefined,
                     },
                     [parentId]: {
-                        ...state.byId[parentId],
+                        ...parent,
                         isExpanded: true,
-                        subtasks: [...state.byId[parentId].subtasks, newTaskId],
+                        subtasks: parent.subtasks ? [parent.subtasks, newTaskId] : [newTaskId],
                     }
                 },
                 allByIds: [...state.allByIds, newTaskId],
@@ -74,7 +76,7 @@ export function taskTreeReducer(state = initialState, action) {
             // Kind of object.assing? Needs Refactoring.
             const { taskId, name, isExpanded, done, isEditing } = action.payload;
             const task =  state.byId[taskId];
-            
+
             return {
                 ...state,
                 byId: {
