@@ -1,5 +1,104 @@
 import { taskTreeReducer } from './taskTreeReducer';
 
+const initialState = {
+        nextTaskId: 5,
+        byId: {
+            task_0: {
+                name: 'Root',
+                subtasks: ['task_1', 'task_2', 'task_3'],
+                isExpanded: true,
+                done: false,
+            },
+            task_1: {
+                name: 'Task 1',
+                subtasks: undefined,
+                isExpanded: false,
+                done: false,
+            },
+            task_2: {
+                name: 'Task 2',
+                subtasks: ['task 4'],
+                isExpanded: true,
+                done: false,
+            },
+            task_3: {
+                name: 'Task 3',
+                subtasks: undefined,
+                isExpanded: false,
+                done: false,
+            },
+            task_4: {
+                name: 'Task 4',
+                subtasks: undefined,
+                isExpanded: false,
+                done: false,
+            },
+        },
+        allByIds: ['task_0', 'task_1', 'task_2', 'task_3', 'task_4'],
+    };
+
+it('handels drag task on target task', () => {
+    expect(
+        taskTreeReducer(
+            {
+                ...initialState,
+                dragTaskId: 'task_4',
+            },
+            { 
+                type: 'DRAG_TASK_ON_TARGET', 
+                payload: {
+                    targetTaskId: 'task_0',
+                },
+            }
+        )
+    ).toEqual(
+        {
+            ...initialState,
+            dragTaskId: 'task_4',
+            dragTargetTaskId: 'task_0',
+        }
+    )
+});
+
+it('ends drag task', () => {
+    expect(
+        taskTreeReducer(
+            {
+                ...initialState,
+                dragTaskId: 'task_4',
+            },
+            { 
+                type: 'END_DRAG', 
+                payload: {},
+            }
+        )
+    ).toEqual(
+        {
+            ...initialState,
+            dragTaskId: undefined,
+        }
+    )
+});
+
+it('starts drag task', () => {
+    expect(
+        taskTreeReducer(
+            initialState,
+            { 
+                type: 'START_DRAG', 
+                payload: {
+                    taskId: 'task_4',
+                },
+            }
+        )
+    ).toEqual(
+        {
+            ...initialState,
+            dragTaskId: 'task_4',
+        }
+    )
+});
+
 it('returns default state of task tree', () => {
     expect(taskTreeReducer(
         undefined, 

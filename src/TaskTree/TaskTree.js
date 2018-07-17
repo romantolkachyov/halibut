@@ -14,13 +14,31 @@ function buildTree(state, taskId) {
     };
 }
 
+let lastTaskTreeState;
+let lastTree;
 const mapStateToProps = (state) => {
+    const tasksById = state.byId;
+    if (lastTaskTreeState === tasksById) {
+        lastTaskTreeState = tasksById;
+        return {
+            taskTree: lastTree,
+        }
+    }
+
+    lastTaskTreeState = tasksById;
+    lastTree = [buildTree(state, 'task_0')];
     return {
-        taskTree: [buildTree(state, 'task_0')],
+        taskTree: lastTree,
     }
 };
 
 const mapDispatchToProps = (dispatch) => ({
+    mouseUpHandler: () => {
+        dispatch({
+            type: 'END_DRAG',
+            payload: {},
+        })
+    },
     expandHandler: (taskNode) => {
         dispatch({ type: 'UPDATE_TASK', payload: { 
             ...taskNode,

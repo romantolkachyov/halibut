@@ -22,7 +22,15 @@
 
 .task-tree--row {
     display: grid;
-    grid-template-columns: 40px auto 40px 40px;
+    grid-template-columns: 10px 40px auto 40px 40px;
     justify-items: center;
     width: 100%;
+}
+
+.task-tree--row--dragging {
+    visibility: hidden;
+}
+
+.task-tree--row--drag-target {
+    color: yellow;
 }

@@ -5,16 +5,39 @@ import { Row } from './Row';
 export function taskTreeRow(taskId) {
     const mapStateToProps = (state) => {
         const task = state.byId[taskId];
-
+        const dragging = taskId === state.dragTaskId;
+        const dragTarget = state.dragTaskId && (taskId === state.dragTargetTaskId);
         return {
             taskId,
             defaultValue: task.name,
             done: task.done,
             isEditing: task.isEditing,
+            dragging,
+            dragTarget,
         };
     }
 
     const mapDispatchToProps = (dispatch) => ({
+        onMouseOverHandler: (taskId) => {
+            dispatch(
+                {
+                    type: 'DRAG_TASK_ON_TARGET',
+                    payload: {
+                        targetTaskId: taskId,
+                    }
+                }
+            )
+        },
+        startDragHandler: (taskId) => {
+            dispatch(
+                {
+                    type: 'START_DRAG',
+                    payload: {
+                        taskId,
+                    }
+                }
+            )
+        },
         doneHandler: (taskId, done) => {
             dispatch(
                 {

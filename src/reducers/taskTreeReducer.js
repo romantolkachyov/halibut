@@ -13,6 +13,27 @@ const initialState = {
 
 export function taskTreeReducer(state = initialState, action) {
     switch (action.type) {
+        case 'DRAG_TASK_ON_TARGET': {
+            const { targetTaskId } = action.payload;
+            return {
+                ...state,
+                dragTargetTaskId: targetTaskId,
+            }
+        }
+        case 'END_DRAG': {
+            return {
+                ...state,
+                dragTaskId: undefined,
+            }
+        }
+        case 'START_DRAG': {
+            const { taskId } = action.payload;
+
+            return {
+                ...state,
+                dragTaskId: taskId,
+            }
+        }
         case 'ADD_TASK': {
             const { name, parentId, isExpanded, isEditing, done } = action.payload;
             const newTaskId = 'task_' + state.nextTaskId;

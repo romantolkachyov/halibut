@@ -2,10 +2,11 @@ import React from 'react';
 import { EditableText, Icon } from '@blueprintjs/core';
 import './TaskTree.css';
 
-export class Row extends React.Component {
+export class Row extends React.PureComponent {
     render() {
         return (
-        <div className='task-tree--row'>
+        <div className={ ['task-tree--row', this.props.dragging ? 'task-tree--row--dragging' : '', this.props.dragTarget ? 'task-tree--row--drag-target' : '' ].join(' ') } onMouseOver={ () => this.props.onMouseOverHandler(this.props.taskId) }>
+            <Icon icon='drag-handle-vertical' onMouseDown={ () => this.props.startDragHandler(this.props.taskId) } />
             <Icon icon='tick' onClick={() => this.props.doneHandler(this.props.taskId, !this.props.done)} />
             <EditableText 
                 defaultValue={this.props.defaultValue} 
@@ -15,7 +16,7 @@ export class Row extends React.Component {
                 isEditing={this.props.isEditing} 
             />
             <Icon icon='plus' onClick={() => this.props.addTaskHandler(this.props.taskId)} />
-            { this.props.taskId !== 'task_0' ? <Icon icon='cross' onClick={() => this.props.removeHandler(this.props.taskId)} /> : '' }
+            { this.props.taskId !== 'task_0' ? <Icon icon='cross' onClick={() => this.props.removeHandler(this.props.taskId)} /> : <div /> }
         </div>
         )
     }
