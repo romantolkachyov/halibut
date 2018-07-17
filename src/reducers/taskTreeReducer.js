@@ -11,6 +11,14 @@ const initialState = {
     allByIds: ['task_0'],
 };
 
+export function findParentTaskId(tasksState, taskId) {
+    for (const currentTaskId of tasksState.allByIds) {
+        if (tasksState.byId[currentTaskId].subtasks && tasksState.byId[currentTaskId].subtasks.includes(taskId)) {
+            return currentTaskId;
+        }
+    }
+}
+
 export function taskTreeReducer(state = initialState, action) {
     switch (action.type) {
         case 'DRAG_TASK_ON_TARGET': {
@@ -21,13 +29,29 @@ export function taskTreeReducer(state = initialState, action) {
             }
         }
         case 'END_DRAG': {
+            if (state.dragTaskId === undefined) return state;
+            const parentTaskId = findParentTaskId(state, state.dragTaskId);
+            const parentSubtasks = state.byId[parentTaskId].subtasks ? state.byId[parentTaskId].subtasks.filter((it) => it !== state.dragTaskId) : [];
             return {
                 ...state,
+                byId: {
+                    ...state.byId,
+                    [state.dragTargetTaskId]: {
+                        ...state.byId[state.dragTargetTaskId],
+                        subtasks: state.byId[state.dragTargetTaskId].subtasks ? [...state.byId[state.dragTargetTaskId].subtasks, state.dragTaskId] : [state.dragTaskId],
+                    },
+                    [parentTaskId]: {
+                        ...state.byId[parentTaskId],
+                        subtasks: parentSubtasks.length > 0 ? parentSubtasks : undefined,
+                    }
+                },
+                dragTargetTaskId: undefined,
                 dragTaskId: undefined,
             }
         }
         case 'START_DRAG': {
             const { taskId } = action.payload;
+            if (taskId === 'task_0') return state;
 
             return {
                 ...state,

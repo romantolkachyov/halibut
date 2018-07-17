@@ -1,4 +1,4 @@
-import { taskTreeReducer } from './taskTreeReducer';
+import { taskTreeReducer, findParentTaskId } from './taskTreeReducer';
 
 const initialState = {
         nextTaskId: 5,
@@ -17,7 +17,7 @@ const initialState = {
             },
             task_2: {
                 name: 'Task 2',
-                subtasks: ['task 4'],
+                subtasks: ['task_4', 'task_3'],
                 isExpanded: true,
                 done: false,
             },
@@ -36,6 +36,13 @@ const initialState = {
         },
         allByIds: ['task_0', 'task_1', 'task_2', 'task_3', 'task_4'],
     };
+
+
+it('finds parent taskId', () => {
+    expect(findParentTaskId(initialState, 'task_4')).toBe('task_2');
+    expect(findParentTaskId(initialState, 'task_2')).toBe('task_0');
+});
+
 
 it('handels drag task on target task', () => {
     expect(
@@ -61,11 +68,13 @@ it('handels drag task on target task', () => {
 });
 
 it('ends drag task', () => {
+    // move subtask
     expect(
         taskTreeReducer(
             {
                 ...initialState,
                 dragTaskId: 'task_4',
+                dragTargetTaskId: 'task_0'
             },
             { 
                 type: 'END_DRAG', 
@@ -75,9 +84,54 @@ it('ends drag task', () => {
     ).toEqual(
         {
             ...initialState,
+            byId: {
+                ...initialState.byId,
+                task_0: {
+                    ...initialState.byId.task_0,
+                    subtasks: [...initialState.byId.task_0.subtasks, 'task_4'],
+                },
+                task_2: {
+                    ...initialState.byId.task_2,
+                    subtasks: ['task_3'],
+                },
+            },
             dragTaskId: undefined,
+            dragTargetTaskId: undefined,
         }
     )
+
+    // move last subtask
+    // expect(
+    //     taskTreeReducer(
+    //         {
+    //             ...initialState,
+    //             dragTaskId: 'task_4',
+    //             dragTargetTaskId: 'task_0'
+    //         },
+    //         { 
+    //             type: 'END_DRAG', 
+    //             payload: {},
+    //         }
+    //     )
+    // ).toEqual(
+    //     {
+    //         ...initialState,
+    //         byId: {
+    //             ...initialState.byId,
+    //             task_0: {
+    //                 ...initialState.byId.task_0,
+    //                 subtasks: [...initialState.byId.task_0.subtasks, 'task_4'],
+    //             },
+    //             task_2: {
+    //                 ...initialState.byId.task_2,
+    //                 subtasks: undefined,
+    //                 isExpanded: false,
+    //             },
+    //         },
+    //         dragTaskId: undefined,
+    //         dragTargetTaskId: undefined,
+    //     }
+    // )
 });
 
 it('starts drag task', () => {
