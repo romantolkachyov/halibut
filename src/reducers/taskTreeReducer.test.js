@@ -1,41 +1,42 @@
+import { Map, List } from 'immutable';
 import { taskTreeReducer, findParentTaskId } from './taskTreeReducer';
 
-const initialState = {
+const initialState = Map({
         nextTaskId: 5,
-        byId: {
-            task_0: {
+        byId: Map({
+            task_0: Map({
                 name: 'Root',
-                subtasks: ['task_1', 'task_2', 'task_3'],
+                subtasks: List(['task_1', 'task_2', 'task_3']),
                 isExpanded: true,
                 done: false,
-            },
-            task_1: {
+            }),
+            task_1: Map({
                 name: 'Task 1',
                 subtasks: undefined,
                 isExpanded: false,
                 done: false,
-            },
-            task_2: {
+            }),
+            task_2: Map({
                 name: 'Task 2',
-                subtasks: ['task_4', 'task_3'],
+                subtasks: List(['task_4', 'task_3']),
                 isExpanded: true,
                 done: false,
-            },
-            task_3: {
+            }),
+            task_3: Map({
                 name: 'Task 3',
                 subtasks: undefined,
                 isExpanded: false,
                 done: false,
-            },
-            task_4: {
+            }),
+            task_4: Map({
                 name: 'Task 4',
                 subtasks: undefined,
                 isExpanded: false,
                 done: false,
-            },
-        },
-        allByIds: ['task_0', 'task_1', 'task_2', 'task_3', 'task_4'],
-    };
+            }),
+        }),
+        allByIds: List(['task_0', 'task_1', 'task_2', 'task_3', 'task_4']),
+    });
 
 
 it('finds parent taskId', () => {
@@ -69,36 +70,28 @@ it('handels drag task on target task', () => {
 
 it('ends drag task', () => {
     // move subtask
+    const initialTestState = initialState
+        .set('dragTaskId', 'task_4')
+        .set('dragTargetTaskId', 'task_0');
+
+    const expectedState = initialTestState
+        .updateIn(
+            ['byId', 'task_0', 'subtasks'],
+            (subtasks) => subtasks.push('task_4')
+        )
+        .setIn(['byId', 'task_2', 'subtasks'], List(['task_3']))
+        .set('dragTaskId', undefined)
+        .set('dragTargetTaskId', undefined);
+
     expect(
         taskTreeReducer(
-            {
-                ...initialState,
-                dragTaskId: 'task_4',
-                dragTargetTaskId: 'task_0'
-            },
+            initialTestState,
             { 
                 type: 'END_DRAG', 
                 payload: {},
             }
         )
-    ).toEqual(
-        {
-            ...initialState,
-            byId: {
-                ...initialState.byId,
-                task_0: {
-                    ...initialState.byId.task_0,
-                    subtasks: [...initialState.byId.task_0.subtasks, 'task_4'],
-                },
-                task_2: {
-                    ...initialState.byId.task_2,
-                    subtasks: ['task_3'],
-                },
-            },
-            dragTaskId: undefined,
-            dragTargetTaskId: undefined,
-        }
-    )
+    ).toEqual(expectedState);
 
     // move last subtask
     // expect(
