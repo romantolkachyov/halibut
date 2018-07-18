@@ -93,50 +93,47 @@ export function taskTreeReducer(state = initialState, action) {
             if (taskId === 'task_0') return state;
 
             const tasksToRemove = [];
-            const checkTasksToRemove = (removeTaskId, removeSubtree = false) => {
-                const removeState = removeSubtree || removeTaskId === taskId;
+            const findTasksToRemove = (currentTaskId, removeSubtree = false) => {
+                const removeState = removeSubtree || currentTaskId === taskId;
                 if (removeState) {
-                    tasksToRemove.push(removeTaskId);
+                    tasksToRemove.push(currentTaskId);
                 }
-                const currentTask = state.byId[removeTaskId];
-                if (!currentTask.subtasks) return;
-                currentTask.subtasks.forEach((task) => checkTasksToRemove(task, removeState));
-                if (currentTask.subtasks.includes(taskId)) {
-                    currentTask.subtasks = currentTask.subtasks.filter((id) => id !== taskId);
-                }
+                const currentTaskSubtasks = state.getIn(['byId', currentTaskId, 'subtasks']);
+                if (currentTaskSubtasks === undefined) return;
+                currentTaskSubtasks.forEach( t => findTasksToRemove(t, removeState));
             }
-            checkTasksToRemove('task_0');
-
-            const tasksById = {};
-            Object.keys(state.byId).forEach((id) => {
-                if (tasksToRemove.includes(id)) return;
-                tasksById[id] = state.byId[id];
-            });
-
-            return {
-                ...state,
-                byId: tasksById,
-                allByIds: state.allByIds.filter((id) => !tasksToRemove.includes(id)),
-            }
+            findTasksToRemove('task_0');
+            // retrive parent task id on ^^^ step?
+            const parentTaskId = findParentTaskId(state, taskId);
+        
+            return state
+                .updateIn(
+                    ['byId', parentTaskId, 'subtasks'], 
+                    s => 
+                        s.filter(i => i !== taskId)
+                )
+                .update(
+                    'byId',
+                    (t) => 
+                        t.filter(
+                            (v, k) => !tasksToRemove.includes(k)
+                        )
+                )
+                .update('allByIds', a => a.filter( i => !tasksToRemove.includes(i)));
         }
         case 'UPDATE_TASK': {
-            // Kind of object.assing? Needs Refactoring.
+            // Needs Refactoring.
             const { taskId, name, isExpanded, done, isEditing } = action.payload;
-            const task =  state.byId[taskId];
 
-            return {
-                ...state,
-                byId: {
-                    ...state.byId,
-                    [taskId]: {
-                        ...task,
-                        name: name || task.name,
-                        isExpanded: (isExpanded !== undefined) ? isExpanded : task.isExpanded,
-                        isEditing: (isEditing !== undefined) ? isEditing : task.isEditing,
-                        done: (done !== undefined) ? done : task.done,
-                    }
-                }
-            }
+            return state
+                .updateIn(
+                    ['byId', taskId],
+                    t => t
+                        .update('name', x => name || x)
+                        .update('isExpanded', x => isExpanded || x)
+                        .update('isEditing', x => isEditing || x)
+                        .update('done', x => done || x)
+                )
         }
         default:
             return state;

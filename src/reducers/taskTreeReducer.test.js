@@ -2,41 +2,41 @@ import { Map, List } from 'immutable';
 import { taskTreeReducer, findParentTaskId } from './taskTreeReducer';
 
 const initialState = Map({
-        nextTaskId: 5,
-        byId: Map({
-            task_0: Map({
-                name: 'Root',
-                subtasks: List(['task_1', 'task_2', 'task_3']),
-                isExpanded: true,
-                done: false,
-            }),
-            task_1: Map({
-                name: 'Task 1',
-                subtasks: undefined,
-                isExpanded: false,
-                done: false,
-            }),
-            task_2: Map({
-                name: 'Task 2',
-                subtasks: List(['task_4', 'task_3']),
-                isExpanded: true,
-                done: false,
-            }),
-            task_3: Map({
-                name: 'Task 3',
-                subtasks: undefined,
-                isExpanded: false,
-                done: false,
-            }),
-            task_4: Map({
-                name: 'Task 4',
-                subtasks: undefined,
-                isExpanded: false,
-                done: false,
-            }),
+    nextTaskId: 5,
+    byId: Map({
+        task_0: Map({
+            name: 'Root',
+            subtasks: List(['task_1', 'task_2']),
+            isExpanded: true,
+            done: false,
         }),
-        allByIds: List(['task_0', 'task_1', 'task_2', 'task_3', 'task_4']),
-    });
+        task_1: Map({
+            name: 'Task 1',
+            subtasks: undefined,
+            isExpanded: false,
+            done: false,
+        }),
+        task_2: Map({
+            name: 'Task 2',
+            subtasks: List(['task_4', 'task_3']),
+            isExpanded: true,
+            done: false,
+        }),
+        task_3: Map({
+            name: 'Task 3',
+            subtasks: undefined,
+            isExpanded: false,
+            done: false,
+        }),
+        task_4: Map({
+            name: 'Task 4',
+            subtasks: undefined,
+            isExpanded: false,
+            done: false,
+        }),
+    }),
+    allByIds: List(['task_0', 'task_1', 'task_2', 'task_3', 'task_4']),
+});
 
 
 it('finds parent taskId', () => {
@@ -62,6 +62,7 @@ it('handels drag task on target task', () => {
             .set('dragTargetTaskId', 'task_0')
     )
 });
+
 
 it('ends drag task', () => {
     // move subtask
@@ -91,6 +92,7 @@ it('ends drag task', () => {
     // move last subtask
 });
 
+
 it('starts drag task', () => {
     expect(
         taskTreeReducer(
@@ -106,6 +108,7 @@ it('starts drag task', () => {
         initialState.set('dragTaskId', 'task_4')
     )
 });
+
 
 it('returns default state of task tree', () => {
     expect(taskTreeReducer(
@@ -160,148 +163,64 @@ it('adds new task to task tree', () => {
         );
 })
 
+
 it('remove task', () => {
-    expect(taskTreeReducer({
-        nextTaskId: 6,
-        byId: {
-            task_0: {
-                name: 'Root task',
-                subtasks: ['task_1'],
-            },
-            task_1: {
-                name: 'Task 1',
-                subtasks: ['task_2', 'task_3', 'task_4'],
-            },
-            task_2: {
-                name: 'Task 2',
-                subtasks: undefined,
-            },
-            task_3: {
-                name: 'Task 3',
-                subtasks: ['task_5'],
-            },
-            task_4: {
-                name: 'Task 4',
-                subtasks: [],
-            },
-            task_5: {
-                name: 'Task 5',
-                subtasks: [],
-            },
-        },
-        allByIds: ['task_0', 'task_1','task_2', 'task_3', 'task_4', 'task_5' ],
-    },
-    {
-        type: 'REMOVE_TASK',
-        payload: {
-            taskId: 'task_3',
-        }
-    }
-    )).toEqual({
-            nextTaskId: 6,
-            byId: {
-                task_0: {
-                    name: 'Root task',
-                    subtasks: ['task_1'],
-                },
-                task_1: {
-                    name: 'Task 1',
-                    subtasks: ['task_2', 'task_4'],
-                },
-                task_2: {
-                    name: 'Task 2',
-                    subtasks: undefined,
-                },
-                task_4: {
-                    name: 'Task 4',
-                    subtasks: [],
-                },
-            },
-            allByIds: ['task_0', 'task_1','task_2', 'task_4' ],
+    const removeTaskId = 'task_3'
+    expect(
+        taskTreeReducer(
+            initialState,
+            {
+                type: 'REMOVE_TASK',
+                payload: {
+                    taskId: removeTaskId,
+                }
             }
         )
-    });
-
-
+    ).toEqual(
+        initialState
+            .removeIn(['byId', removeTaskId])
+            .updateIn(['byId', 'task_2', 'subtasks'], s => s.filter(i => i !== removeTaskId))
+            .update('allByIds', a => a.filter(i => i !== removeTaskId))
+    );
+});
+    
 
 it('remove root task', () => {
-    expect(taskTreeReducer({
-        nextTaskId: 6,
-        byId: {
-            task_0: {
-                name: 'Root task',
-                subtasks: ['task_1'],
-            },
-            task_1: {
-                name: 'Task 1',
-                subtasks: [],
-            },
-        },
-        allByIds: ['task_0', 'task_1'],
-    },
-    {
-        type: 'REMOVE_TASK',
-        payload: {
-            taksId: 'task_0',
-        }
-    }
-    )).toEqual({
-            nextTaskId: 6,
-            byId: {
-                task_0: {
-                    name: 'Root task',
-                    subtasks: ['task_1'],
-                },
-                task_1: {
-                    name: 'Task 1',
-                    subtasks: [],
-                },
-            },
-            allByIds: ['task_0', 'task_1'],
-        })
-    });
+    expect(
+        taskTreeReducer(
+            initialState,
+            {
+                type: 'REMOVE_TASK',
+                payload: {
+                    taskId: 'task_0',
+                }
+            }
+        )
+    ).toEqual(
+        initialState
+    )
+});
 
 
 it('update task', () => {
-    expect(taskTreeReducer({
-        nextTaskId: 6,
-        byId: {
-            task_0: {
-                name: 'Root task',
-                subtasks: ['task_1'],
-                isExpanded: false,
-            },
-            task_1: {
-                name: 'Task 1',
-                subtasks: [],
-                isExpanded: false,
-            },
-        },
-        allByIds: ['task_0', 'task_1'],
-    },
-    {
-        type: 'UPDATE_TASK',
-        payload: {
-            taskId: 'task_1',
-            name: 'task 42',
-            isExpanded: true,
-        }
-    }
-    )).toEqual({
-            nextTaskId: 6,
-            byId: {
-                task_0: {
-                    name: 'Root task',
-                    subtasks: ['task_1'],
-                    isExpanded: false,
-                },
-                task_1: {
+    const updateTaskId = 'task_1';
+    expect(
+        taskTreeReducer(
+            initialState,
+            {
+                type: 'UPDATE_TASK',
+                payload: {
+                    taskId: updateTaskId,
                     name: 'task 42',
-                    subtasks: [],
                     isExpanded: true,
-                },
-            },
-            allByIds: ['task_0', 'task_1'],
-        }
+                }
+            }
+    )).toEqual(
+        initialState.updateIn(
+            ['byId', updateTaskId],
+            t => t
+                .set('name', 'task 42')
+                .set('isExpanded', true)
         )
-    });
+    )
+});
