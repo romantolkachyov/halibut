@@ -1,17 +1,17 @@
 import { Map, List } from 'immutable';
 
-const initialState = { 
+const initialState = Map({ 
     nextTaskId: 1,
-    byId: {
-        task_0: {
+    byId: Map({
+        task_0: Map({
             name: 'Root',
-            subtasks: [],
+            subtasks: undefined,
             isExpanded: false,
             done: false,
-        }
-    }, 
-    allByIds: ['task_0'],
-};
+        }),
+    }), 
+    allByIds: List(['task_0']),
+});
 
 export function findParentTaskId(tasksState, taskId) {
     for (const currentTaskId of tasksState.get('allByIds')) {
@@ -28,16 +28,13 @@ export function taskTreeReducer(state = initialState, action) {
     switch (action.type) {
         case 'DRAG_TASK_ON_TARGET': {
             const { targetTaskId } = action.payload;
-            return {
-                ...state,
-                dragTargetTaskId: targetTaskId,
-            }
+            return state.set('dragTargetTaskId', targetTaskId);
         }
         case 'END_DRAG': {
             const dragTaskId = state.get('dragTaskId')
             if ( dragTaskId === undefined) return state;
             const parentTaskId = findParentTaskId(state, dragTaskId);
-            const parentSubtasks = state.getIn(['byId', parentTaskId, 'subtasks']) ? state.getIn(['byId', parentTaskId, 'subtasks']).filter((it) => it !== dragTaskId) : List();
+            // const parentSubtasks = state.getIn(['byId', parentTaskId, 'subtasks']) ? state.getIn(['byId', parentTaskId, 'subtasks']).filter((it) => it !== dragTaskId) : List();
             
             const dragTargetTaskId = state.get('dragTargetTaskId');
 
@@ -58,36 +55,36 @@ export function taskTreeReducer(state = initialState, action) {
             const { taskId } = action.payload;
             if (taskId === 'task_0') return state;
 
-            return {
-                ...state,
-                dragTaskId: taskId,
-            }
+            return state.set('dragTaskId', taskId);
         }
         case 'ADD_TASK': {
-            const { name, parentId, isExpanded, isEditing, done } = action.payload;
-            const newTaskId = 'task_' + state.nextTaskId;
-            const parent = state.byId[parentId];
+            const { name, parentId } = action.payload;
+            const nextTaskId = state.get('nextTaskId');
+            const newTaskId = 'task_' + nextTaskId;
 
-            return {
-                ...state,
-                nextTaskId: state.nextTaskId + 1,
-                byId: {
-                    ...state.byId,
-                    [newTaskId]: {
+            return state
+                .set('nextTaskId', nextTaskId + 1)
+                .setIn(
+                    ['byId', newTaskId], 
+                    Map({
                         name,
                         isExpanded: false,
                         isEditing: true,
                         done: false,
                         subtasks: undefined,
-                    },
-                    [parentId]: {
-                        ...parent,
-                        isExpanded: true,
-                        subtasks: parent.subtasks ? [...parent.subtasks, newTaskId] : [newTaskId],
-                    }
-                },
-                allByIds: [...state.allByIds, newTaskId],
-            }
+                   })
+                )
+                .updateIn(
+                    ['byId', parentId],
+                    (p) => p
+                        .set('isExpanded', true)
+                        .update('subtasks', (s) => {
+                            if (s === undefined) return List([newTaskId]);
+                            return s.push(newTaskId);
+                        })
+                )
+                .update('allByIds', a => a.push(newTaskId))
+            ;
         }
         case 'REMOVE_TASK': {
             const { taskId } = action.payload;
