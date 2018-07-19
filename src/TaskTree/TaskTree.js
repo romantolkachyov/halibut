@@ -4,20 +4,20 @@ import { Tree } from './Tree';
 import { taskTreeRow } from './TaskTreeRow';
 
 function buildTree(state, taskId) {
-    const task = state.byId[taskId];
+    const task = state.getIn(['byId', taskId]);
     const TaskTreeRow = taskTreeRow(taskId);
     return {
         label: <TaskTreeRow />,
         id: taskId,
-        isExpanded: task.isExpanded,
-        childNodes: task.subtasks && task.subtasks.map((subtaskId) => buildTree(state, subtaskId)),
+        isExpanded: task.get('isExpanded'),
+        childNodes: task.get('subtasks') && task.get('subtasks').map((subtaskId) => buildTree(state, subtaskId)),
     };
 }
 
 let lastTaskTreeState;
 let lastTree;
 const mapStateToProps = (state) => {
-    const tasksById = state.byId;
+    const tasksById = state.get('byId');
     if (lastTaskTreeState === tasksById) {
         lastTaskTreeState = tasksById;
         return {

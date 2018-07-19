@@ -4,14 +4,14 @@ import { Row } from './Row';
 
 export function taskTreeRow(taskId) {
     const mapStateToProps = (state) => {
-        const task = state.byId[taskId];
-        const dragging = taskId === state.dragTaskId;
-        const dragTarget = state.dragTaskId && (taskId === state.dragTargetTaskId);
+        const task = state.getIn(['byId', taskId]);
+        const dragging = taskId === state.get('dragTaskId');
+        const dragTarget = state.get('dragTaskId') && (taskId === state.get('dragTargetTaskId'));
         return {
             taskId,
-            defaultValue: task.name,
-            done: task.done,
-            isEditing: task.isEditing,
+            defaultValue: task.get('name'),
+            done: task.get('done'),
+            isEditing: task.get('isEditing'),
             dragging,
             dragTarget,
         };

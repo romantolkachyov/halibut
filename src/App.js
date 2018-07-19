@@ -6,6 +6,7 @@ import { taskTreeReducer } from './reducers/taskTreeReducer';
 
 import '../node_modules/@blueprintjs/core/lib/css/blueprint.css';
 import '../node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css';
+import { fromJS } from 'immutable';
 import './App.css';
 
 import { TaskTree } from './TaskTree/TaskTree';
@@ -15,20 +16,20 @@ let store;
 if (loadedState === null) {
   store = createStore(taskTreeReducer);
 } else {
-  store = createStore(taskTreeReducer, JSON.parse(loadedState));
+  store = createStore(taskTreeReducer, fromJS(JSON.parse(loadedState)));
 }
 
 let saveTimeout;
 store.subscribe(() => {
-  console.log(store.getState());
   if (!store.getState()) return;
-
+  console.log(store.getState());
+  
   if (saveTimeout) {
       clearTimeout(saveTimeout);
   }
 
   saveTimeout = setTimeout(() => {
-      window.localStorage.setItem('app_state', JSON.stringify(store.getState()));
+      window.localStorage.setItem('app_state', JSON.stringify(store.getState().toJS()));
   }, 1 * 1000);
 });
 
