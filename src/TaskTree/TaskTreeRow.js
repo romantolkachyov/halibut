@@ -18,7 +18,7 @@ export function taskTreeRow(taskId) {
     }
 
     const mapDispatchToProps = (dispatch) => ({
-        onMouseOverHandler: (taskId) => {
+        onMouseEnterHandler: (taskId) => {
             dispatch(
                 {
                     type: 'DRAG_TASK_ON_TARGET',

@@ -129,10 +129,10 @@ export function taskTreeReducer(state = initialState, action) {
                 .updateIn(
                     ['byId', taskId],
                     t => t
-                        .update('name', x => name || x)
-                        .update('isExpanded', x => isExpanded || x)
-                        .update('isEditing', x => isEditing || x)
-                        .update('done', x => done || x)
+                        .update('name', x => name === undefined ? x : name)
+                        .update('isExpanded', x => isExpanded === undefined ? x : isExpanded)
+                        .update('isEditing', x => isEditing === undefined ? x : isEditing)
+                        .update('done', x => done === undefined ? x : done)
                 )
         }
         default:

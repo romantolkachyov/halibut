@@ -1,24 +1,27 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { List, Map } from 'immutable';
 import { Tree } from './Tree';
 import { taskTreeRow } from './TaskTreeRow';
 
 function buildTree(state, taskId) {
+
     const task = state.getIn(['byId', taskId]);
     const TaskTreeRow = taskTreeRow(taskId);
-    return {
+
+    return Map({
         label: <TaskTreeRow />,
         id: taskId,
         isExpanded: task.get('isExpanded'),
         childNodes: task.get('subtasks') && task.get('subtasks').map((subtaskId) => buildTree(state, subtaskId)),
-    };
+    });
 }
 
 let lastTaskTreeState;
 let lastTree;
 const mapStateToProps = (state) => {
     const tasksById = state.get('byId');
-    if (lastTaskTreeState === tasksById) {
+    if (lastTaskTreeState && lastTaskTreeState.equals(tasksById)) {
         lastTaskTreeState = tasksById;
         return {
             taskTree: lastTree,
@@ -26,7 +29,7 @@ const mapStateToProps = (state) => {
     }
 
     lastTaskTreeState = tasksById;
-    lastTree = [buildTree(state, 'task_0')];
+    lastTree = List([buildTree(state, 'task_0')]);
     return {
         taskTree: lastTree,
     }
@@ -40,6 +43,7 @@ const mapDispatchToProps = (dispatch) => ({
         })
     },
     expandHandler: (taskNode) => {
+        console.log('tasknode', taskNode);
         dispatch({ type: 'UPDATE_TASK', payload: { 
             ...taskNode,
             taskId: taskNode.id,

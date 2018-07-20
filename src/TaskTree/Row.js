@@ -5,7 +5,7 @@ import './TaskTree.css';
 export class Row extends React.PureComponent {
     render() {
         return (
-        <div className={ ['task-tree--row', this.props.dragging ? 'task-tree--row--dragging' : '', this.props.dragTarget ? 'task-tree--row--drag-target' : '' ].join(' ') } onMouseOver={ () => this.props.onMouseOverHandler(this.props.taskId) }>
+        <div className={ ['task-tree--row', this.props.dragging ? 'task-tree--row--dragging' : '', this.props.dragTarget ? 'task-tree--row--drag-target' : '' ].join(' ') } onMouseEnter={ () => this.props.onMouseEnterHandler(this.props.taskId) }>
             <Icon icon='drag-handle-vertical' onMouseDown={ () => this.props.startDragHandler(this.props.taskId) } />
             <Icon icon='tick' onClick={() => this.props.doneHandler(this.props.taskId, !this.props.done)} />
             <EditableText 
