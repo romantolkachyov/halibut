@@ -1,1 +1,1 @@
-# halibut
+![Halibut task outliner](https://raw.githubusercontent.com/bezrukovspb/halibut/master/halibut.jpg)
