@@ -31,12 +31,20 @@ export function taskTreeReducer(state = initialState, action) {
             return state.set('dragTargetTaskId', targetTaskId);
         }
         case 'END_DRAG': {
-            const dragTaskId = state.get('dragTaskId')
-            if ( dragTaskId === undefined) return state;
+            const dragTaskId = state.get('dragTaskId');
+            const dragTargetTaskId = state.get('dragTargetTaskId');
+            if ( 
+                dragTaskId === undefined 
+                || dragTaskId === dragTargetTaskId
+            ) {
+                return state
+                    .set('dragTargetTaskId', undefined)
+                    .set('dragTaskId', undefined);
+            }
+
             const parentTaskId = findParentTaskId(state, dragTaskId);
             // const parentSubtasks = state.getIn(['byId', parentTaskId, 'subtasks']) ? state.getIn(['byId', parentTaskId, 'subtasks']).filter((it) => it !== dragTaskId) : List();
-            
-            const dragTargetTaskId = state.get('dragTargetTaskId');
+        
 
             return state
                 .set('dragTargetTaskId', undefined)

@@ -3,6 +3,8 @@ import { taskTreeReducer, findParentTaskId } from './taskTreeReducer';
 
 const initialState = Map({
     nextTaskId: 5,
+    dragTargetTaskId: undefined,
+    dragTaskId: undefined,
     byId: Map({
         task_0: Map({
             name: 'Root',
@@ -89,6 +91,20 @@ it('ends drag task', () => {
         )
     ).toEqual(expectedState);
 
+    // move task on it self
+    const moveTaskOnSelfInitialState = initialState
+        .set('dragTargetTaskId', 'task_4')
+        .set('dragTaskId', 'task_4');
+
+    expect(
+        taskTreeReducer(
+            moveTaskOnSelfInitialState,
+            {
+                type: 'END_DRAG',
+                payload: {},
+            }
+        )
+    ).toEqual(initialState);
     // move last subtask
 });
 
