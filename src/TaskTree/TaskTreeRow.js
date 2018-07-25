@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Row } from './Row';
+import { Row } from '../components/Row';
 
 export function taskTreeRow(taskId) {
     const mapStateToProps = (state) => {

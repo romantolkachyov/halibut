@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { List, Map } from 'immutable';
-import { Tree } from './Tree';
+import { Tree } from '../components/Tree';
 import { taskTreeRow } from './TaskTreeRow';
 
 function buildTree(state, taskId) {

@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Tree as PTTree } from '@blueprintjs/core';
 import { DraggableTree } from '../components/DraggableTree';
-import './TaskTree.css';
+import './TaskTreeRow.css';
 
 export class Tree extends PureComponent {
     render() {

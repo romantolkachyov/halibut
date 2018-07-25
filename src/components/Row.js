@@ -1,5 +1,6 @@
 import React from 'react';
 import { EditableText, Icon } from '@blueprintjs/core';
+import './TaskTreeRow.css';
 
 export class Row extends React.PureComponent {
     render() {
