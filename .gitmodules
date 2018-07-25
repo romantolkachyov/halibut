@@ -1,0 +1,3 @@
+[submodule "src/components/DraggableTree"]
+	path = src/components/DraggableTree
+	url = git@github.com:bezrukovspb/draggable-blueprint-tree.git
