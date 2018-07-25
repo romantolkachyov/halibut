@@ -1,6 +1,6 @@
 import { Map, List } from 'immutable';
 
-const initialState = Map({ 
+const initialState = Map({
     nextTaskId: 1,
     byId: Map({
         task_0: Map({
@@ -9,7 +9,7 @@ const initialState = Map({
             isExpanded: false,
             done: false,
         }),
-    }), 
+    }),
     allByIds: List(['task_0']),
 });
 
@@ -26,29 +26,11 @@ export function findParentTaskId(tasksState, taskId) {
 
 export function taskTreeReducer(state = initialState, action) {
     switch (action.type) {
-        case 'DRAG_TASK_ON_TARGET': {
-            const { targetTaskId } = action.payload;
-            return state.set('dragTargetTaskId', targetTaskId);
-        }
-        case 'END_DRAG': {
-            const dragTaskId = state.get('dragTaskId');
-            const dragTargetTaskId = state.get('dragTargetTaskId');
-            if ( 
-                dragTaskId === undefined 
-                || dragTaskId === dragTargetTaskId
-            ) {
-                return state
-                    .set('dragTargetTaskId', undefined)
-                    .set('dragTaskId', undefined);
-            }
-
+        case 'DRAG_TASK': {
+            const { dragTaskId, dragTargetTaskId } = action.payload;
             const parentTaskId = findParentTaskId(state, dragTaskId);
-            // const parentSubtasks = state.getIn(['byId', parentTaskId, 'subtasks']) ? state.getIn(['byId', parentTaskId, 'subtasks']).filter((it) => it !== dragTaskId) : List();
-        
 
             return state
-                .set('dragTargetTaskId', undefined)
-                .set('dragTaskId', undefined)
                 .updateIn(['byId', dragTargetTaskId, 'subtasks'], (subtasks) => {
                     if (subtasks === undefined) return List([dragTaskId]);
                     return subtasks.push(dragTaskId)
@@ -57,13 +39,7 @@ export function taskTreeReducer(state = initialState, action) {
                     const filtredSubtasks = subtasks.filter((subtask) => subtask !== dragTaskId);
                     if (filtredSubtasks.isEmpty()) return undefined;
                     return filtredSubtasks;
-                })
-        }
-        case 'START_DRAG': {
-            const { taskId } = action.payload;
-            if (taskId === 'task_0') return state;
-
-            return state.set('dragTaskId', taskId);
+                });
         }
         case 'ADD_TASK': {
             const { name, parentId } = action.payload;

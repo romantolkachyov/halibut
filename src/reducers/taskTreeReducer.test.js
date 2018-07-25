@@ -3,8 +3,6 @@ import { taskTreeReducer, findParentTaskId } from './taskTreeReducer';
 
 const initialState = Map({
     nextTaskId: 5,
-    dragTargetTaskId: undefined,
-    dragTaskId: undefined,
     byId: Map({
         task_0: Map({
             name: 'Root',
@@ -47,82 +45,42 @@ it('finds parent taskId', () => {
 });
 
 
-it('handels drag task on target task', () => {
-    expect(
-        taskTreeReducer(
-            initialState.set('dragTaskId', 'task_4'),
-            { 
-                type: 'DRAG_TASK_ON_TARGET', 
-                payload: {
-                    targetTaskId: 'task_0',
-                },
-            }
-        )
-    ).toEqual(
-        initialState
-            .set('dragTaskId', 'task_4')
-            .set('dragTargetTaskId', 'task_0')
-    )
-});
-
-
-it('ends drag task', () => {
+it('drags task', () => {
     // move subtask
-    const initialTestState = initialState
-        .set('dragTaskId', 'task_4')
-        .set('dragTargetTaskId', 'task_0');
-
-    const expectedState = initialTestState
+    const expectedState = initialState
         .updateIn(
             ['byId', 'task_0', 'subtasks'],
             (subtasks) => subtasks.push('task_4')
         )
-        .setIn(['byId', 'task_2', 'subtasks'], List(['task_3']))
-        .set('dragTaskId', undefined)
-        .set('dragTargetTaskId', undefined);
+        .setIn(['byId', 'task_2', 'subtasks'], List(['task_3']));
 
     expect(
         taskTreeReducer(
-            initialTestState,
-            { 
-                type: 'END_DRAG', 
-                payload: {},
+            initialState,
+            {
+                type: 'DRAG_TASK',
+                payload: {
+                    dragTargetTaskId: 'task_0',
+                    dragTaskId: 'task_4',
+                },
             }
         )
     ).toEqual(expectedState);
 
     // move task on it self
-    const moveTaskOnSelfInitialState = initialState
-        .set('dragTargetTaskId', 'task_4')
-        .set('dragTaskId', 'task_4');
-
     expect(
         taskTreeReducer(
-            moveTaskOnSelfInitialState,
+            initialState,
             {
                 type: 'END_DRAG',
-                payload: {},
+                payload: {
+                    dragTargetTaskId: 'task_4',
+                    dragTaskId: 'task_4',
+                },
             }
         )
     ).toEqual(initialState);
     // move last subtask
-});
-
-
-it('starts drag task', () => {
-    expect(
-        taskTreeReducer(
-            initialState,
-            { 
-                type: 'START_DRAG', 
-                payload: {
-                    taskId: 'task_4',
-                },
-            }
-        )
-    ).toEqual(
-        initialState.set('dragTaskId', 'task_4')
-    )
 });
 
 

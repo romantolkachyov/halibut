@@ -50,6 +50,19 @@ const mapDispatchToProps = (dispatch) => ({
             isExpanded: !taskNode.isExpanded,
          }})
     },
+    dragAndDropHandler: (dragTaskId, dragTargetTaskId, dragAndDropType) => {
+        console.log('drag and drop!');
+        dispatch(
+            {
+                type: 'DRAG_TASK',
+                payload: {
+                    dragTargetTaskId,
+                    dragTaskId,
+                    dragAndDropType,
+                },
+            }
+        )
+    },
 });
 
 export const TaskTree = connect(mapStateToProps, mapDispatchToProps)(Tree);

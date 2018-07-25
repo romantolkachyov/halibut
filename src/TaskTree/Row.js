@@ -4,7 +4,7 @@ import { EditableText, Icon } from '@blueprintjs/core';
 export class Row extends React.PureComponent {
     render() {
         return (
-        <div className={ 'task-tree__row' } onMouseEnter={ () => this.props.onMouseEnterHandler(this.props.taskId) }>
+        <div className={ 'task-tree__row' }>
             <Icon icon='tick' onClick={() => this.props.doneHandler(this.props.taskId, !this.props.done)} />
             <EditableText
                 defaultValue={this.props.defaultValue}

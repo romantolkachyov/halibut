@@ -7,12 +7,14 @@ export class Tree extends PureComponent {
     render() {
         console.log('tree render!', this.props.taskTree.toJS());
         return (
-            <div onMouseUp={ () => this.props.mouseUpHandler() } 
+            <div onMouseUp={ () => this.props.mouseUpHandler() }
                 className='task-tree'>
-                <DraggableTree 
-                    contents={this.props.taskTree.toJS()} 
-                    onNodeExpand={this.props.expandHandler} 
-                    onNodeCollapse={this.props.expandHandler} />
+                <DraggableTree
+                    contents={this.props.taskTree.toJS()}
+                    onNodeExpand={this.props.expandHandler}
+                    onNodeCollapse={this.props.expandHandler}
+                    onDragAndDrop={this.props.dragAndDropHandler}
+                />
             </div>
         );
     }
