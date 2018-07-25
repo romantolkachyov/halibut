@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Tree as PTTree } from '@blueprintjs/core';
+import { DraggableTree } from '../components/DraggableTree';
 import './TaskTree.css';
 
 export class Tree extends PureComponent {
@@ -8,7 +9,7 @@ export class Tree extends PureComponent {
         return (
             <div onMouseUp={ () => this.props.mouseUpHandler() } 
                 className='task-tree'>
-                <PTTree 
+                <DraggableTree 
                     contents={this.props.taskTree.toJS()} 
                     onNodeExpand={this.props.expandHandler} 
                     onNodeCollapse={this.props.expandHandler} />
