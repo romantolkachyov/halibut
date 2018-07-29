@@ -3,6 +3,7 @@ import { taskTreeReducer, findParentTaskId } from './taskTreeReducer';
 
 const initialState = Map({
     nextTaskId: 5,
+    columns: List([]),
     byId: Map({
         task_0: Map({
             name: 'Root',
@@ -197,4 +198,21 @@ it('update task', () => {
                 .set('isExpanded', true)
         )
     )
+});
+
+it('add new column', () => {
+    expect(
+        taskTreeReducer(
+            initialState,
+            {
+                type: 'ADD_NEW_COLUMN',
+                payload: {
+                   title: 'New column',
+                },
+            },
+        )
+    ).toEqual(
+        initialState
+            .update('columns', (columns) => columns.push('New column'))
+    );
 });

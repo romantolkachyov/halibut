@@ -2,6 +2,7 @@ import { Map, List } from 'immutable';
 
 const initialState = Map({
     nextTaskId: 1,
+    columns: List([]),
     byId: Map({
         task_0: Map({
             name: 'Root',
@@ -118,6 +119,13 @@ export function taskTreeReducer(state = initialState, action) {
                         .update('isEditing', x => isEditing === undefined ? x : isEditing)
                         .update('done', x => done === undefined ? x : done)
                 )
+        }
+        case 'ADD_NEW_COLUMN': {
+            const { title } = action.payload;
+            return state
+                    .update('columns', cols => {
+                        return cols.push(title);
+                    });
         }
         default:
             return state;
