@@ -1,6 +1,9 @@
 # VIM
 *.swp
 
+# VSCode
+.vscode
+
 # Logs
 logs
 *.log
